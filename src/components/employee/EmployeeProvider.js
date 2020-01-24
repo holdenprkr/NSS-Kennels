@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react"
+import {withRouter} from "react-router-dom"
 
 /*
     The context is imported and used by individual components
@@ -9,7 +10,7 @@ export const EmployeeContext = React.createContext()
 /*
  This component establishes what data can be used.
  */
-export const EmployeeProvider = (props) => {
+ const EmployeeProvider = (props) => {
     const [employees, setEmployees] = useState([])
 
     const getEmployees = () => {
@@ -19,14 +20,14 @@ export const EmployeeProvider = (props) => {
     }
 
     const addEmployees = employee => {
-        return fetch("http://localhost:8088/empoyees", {
+        return fetch("http://localhost:8088/employees", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(employee)
         })
-            .then(getEmployees)
+            .then(getEmployees).then(props.history.push("/employees"))
     }
 
     /*
@@ -49,3 +50,5 @@ export const EmployeeProvider = (props) => {
         </EmployeeContext.Provider>
     )
 }
+
+export default withRouter(EmployeeProvider)
