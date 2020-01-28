@@ -2,10 +2,26 @@ import React from "react"
 import NavBar from "./nav/NavBar"
 import ApplicationViews from "./ApplicationViews"
 import "./Kennel.css"
+import Login from "./auth/Login"
+import { Route, Redirect } from "react-router-dom"
+import Register from "./auth/Register"
 
 export default () => (
     <>
-        <NavBar />
-        <ApplicationViews />
+        <Route render={() => {
+            if (localStorage.getItem("kennel_customer")) {
+                return (
+                    <>
+                        <Route render={props => <NavBar {...props} />} />
+                        <Route render={props => <ApplicationViews {...props} />} />
+                    </>
+                )
+            } else {
+                return <Redirect to="/login" />
+            }
+        }} />
+
+        <Route path="/login" render={props => <Login {...props} />} />
+        <Route path="/register" render={props => <Register {...props} />} />
     </>
 )

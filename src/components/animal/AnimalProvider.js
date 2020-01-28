@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react"
+import {withRouter} from "react-router-dom"
 
 /*
     The context is imported and used by individual components
@@ -9,7 +10,7 @@ export const AnimalContext = React.createContext()
 /*
  This component establishes what data can be used.
  */
-export const AnimalProvider = (props) => {
+const AnimalProvider = (props) => {
     const [animals, setAnimals] = useState([])
 
     const getAnimals = () => {
@@ -25,6 +26,13 @@ export const AnimalProvider = (props) => {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(animal)
+        })
+            .then(getAnimals).then(props.history.push("/animals"))
+    }
+
+    const releaseAnimal = animalId => {
+        return fetch(`http://localhost:8088/animals/${animalId}`, {
+            method: "DELETE"
         })
             .then(getAnimals)
     }
@@ -43,9 +51,11 @@ export const AnimalProvider = (props) => {
 
     return (
         <AnimalContext.Provider value={{
-            animals, addAnimal
+            animals, addAnimal, releaseAnimal
         }}>
             {props.children}
         </AnimalContext.Provider>
     )
 }
+
+export default withRouter(AnimalProvider)
