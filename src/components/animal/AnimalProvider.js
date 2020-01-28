@@ -37,6 +37,17 @@ const AnimalProvider = (props) => {
             .then(getAnimals)
     }
 
+    const updateAnimal = animal => {
+        return fetch(`http://localhost:8088/animals/${animal.id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(animal)
+        })
+            .then(getAnimals).then(props.history.push("/animals"))
+    }
+
     /*
         Load all animals when the component is mounted. Ensure that
         an empty array is the second argument to avoid infinite loop.
@@ -51,7 +62,7 @@ const AnimalProvider = (props) => {
 
     return (
         <AnimalContext.Provider value={{
-            animals, addAnimal, releaseAnimal
+            animals, addAnimal, releaseAnimal, updateAnimal
         }}>
             {props.children}
         </AnimalContext.Provider>
